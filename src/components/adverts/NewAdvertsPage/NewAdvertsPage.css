@@ -1,0 +1,27 @@
+.formContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.advertName>input {
+    width: 50%;
+    margin-bottom: 1em;
+}
+
+.advertPrice>input {
+    width: 50%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.tags {
+    margin-bottom: 1em;
+}
+
+.tags>select {
+    margin-top: 0.5em;
+}
+
+.advertPhoto {
+    margin-bottom: 1em;
+}

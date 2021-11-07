@@ -10,6 +10,7 @@ const Button = styled.button`
   border-style: solid;
   border-width: 1px;
   border-color: ${accentColor};
+  width: ${props => (props.variant === 'delete' ? '91%' : '')};
   color: ${props => (props.variant === 'primary' ? 'white' : accentColor)};
   cursor: pointer;
   display: flex;

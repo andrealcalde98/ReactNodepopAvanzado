@@ -1,0 +1,10 @@
+.data {
+    position: relative;
+    text-align: left;
+    padding: 0 15px;
+    margin-bottom: 2em;
+}
+
+.photo {
+    width: 100%;
+}

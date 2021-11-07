@@ -11,6 +11,13 @@ export const login = credentials => {
   });
 };
 
+export const loginSession = credentials => {
+  return client.post('api/auth/login', credentials).then(({ accessToken }) => {
+    setAuthorizationHeader(accessToken);
+    storage.setSession('auth', accessToken);
+  });
+};
+
 export const logout = () =>
   Promise.resolve().then(() => {
     removeAuthorizationHeader();

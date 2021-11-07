@@ -1,17 +1,19 @@
-import T from "prop-types";
+import T from 'prop-types';
 import { useState, useMemo } from "react";
 import FormField from "../../common/FormField.js";
 import Button from "../../common/Button";
 
-import { login } from "../service";
+import { login, loginSession } from "../service";
 import { AuthContextConsumer } from "../context";
 
 import "./LoginPage.css";
 
-function LoginPage() {
+function LoginPage({ onLogin, history, location }) {
     const [value, setValue] = useState({ email: "", password: "" });
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [checked, setIsChecked] = useState(null);
+
 
     const resetError = () => setError(null);
 
@@ -22,21 +24,37 @@ function LoginPage() {
         }));
     };
 
+    const handleCheck = (event) => {
+        setIsChecked(event.target.checked)
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         // call to api - send value
         setIsLoading(true);
         resetError();
-        try {
-            await login(value);
-            setIsLoading(false);
-            // onLogin();
-            // const { from } = location.state || { from: { pathname: "/" } };
-            // history.replace(from);
-            window.alert("funciona")
-        } catch (error) {
-            setError(error);
-            setIsLoading(false);
+        if (checked) {
+            try {
+                await loginSession(value);
+                setIsLoading(false);
+                onLogin();
+                const { from } = location.state || { from: { pathname: "/adverts" } };
+                history.replace(from);
+            } catch (error) {
+                setError(error);
+                setIsLoading(false);
+            }
+        } else {
+            try {
+                await login(value);
+                setIsLoading(false);
+                onLogin();
+                const { from } = location.state || { from: { pathname: "/adverts" } };
+                history.replace(from);
+            } catch (error) {
+                setError(error);
+                setIsLoading(false);
+            }
         }
     };
 
@@ -74,6 +92,11 @@ function LoginPage() {
                 >
                     Log in
                 </Button>
+                <br></br>
+                <label>
+                    <input type="checkbox" id="cbox1" onChange={handleCheck} />
+                    Quieres mantener la sesión iniciada?
+                </label>
             </form>
             {error && (
                 <div onClick={resetError} className="loginPage-error">
@@ -84,17 +107,13 @@ function LoginPage() {
     );
 }
 
-// LoginPage.propTypes = {
-//     onLogin: T.func.isRequired,
-// };
+LoginPage.propTypes = {
+    onLogin: T.func.isRequired,
+};
 
-// LoginPage.defaultProps = {
-//   onLogin: () => {},
-// };
-// onLogin={auth.handleLogin} {...props}
 const ConnectedLoginPage = (props) => (
     <AuthContextConsumer>
-        {(auth) => <LoginPage />}
+        {(auth) => <LoginPage onLogin={auth.handleLogin} {...props} />}
     </AuthContextConsumer>
 );
 

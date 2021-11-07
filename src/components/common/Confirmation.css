@@ -1,0 +1,16 @@
+.confirmation {
+    color: white;
+    background-color: red;
+    padding: 20px;
+    border: 2px solid red;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(0%, -50%);
+    transform: translate(-50%, 0%);
+}
+
+.close {
+    color: Black;
+    float: right;
+}
