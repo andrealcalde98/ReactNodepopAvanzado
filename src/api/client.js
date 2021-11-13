@@ -22,6 +22,12 @@ export const setAuthorizationHeader = token => {
   client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
 
+export const configureClient = ({ accessToken }) => {
+  if (accessToken) {
+    setAuthorizationHeader(accessToken);
+  }
+};
+
 export const removeAuthorizationHeader = () => {
   delete client.defaults.headers.common['Authorization'];
 };

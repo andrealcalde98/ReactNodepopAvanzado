@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import FormField from "../../common/FormField.js";
 import Button from "../../common/Button";
 
-import { login, loginSession } from "../service";
+import { login } from "../service";
 import { AuthContextConsumer } from "../context";
 
 import "./LoginPage.css";
@@ -25,6 +25,7 @@ function LoginPage({ onLogin, history, location }) {
     };
 
     const handleCheck = (event) => {
+        console.log(event.target.checked)
         setIsChecked(event.target.checked)
     }
 
@@ -33,28 +34,15 @@ function LoginPage({ onLogin, history, location }) {
         // call to api - send value
         setIsLoading(true);
         resetError();
-        if (checked) {
-            try {
-                await loginSession(value);
-                setIsLoading(false);
-                onLogin();
-                const { from } = location.state || { from: { pathname: "/adverts" } };
-                history.replace(from);
-            } catch (error) {
-                setError(error);
-                setIsLoading(false);
-            }
-        } else {
-            try {
-                await login(value);
-                setIsLoading(false);
-                onLogin();
-                const { from } = location.state || { from: { pathname: "/adverts" } };
-                history.replace(from);
-            } catch (error) {
-                setError(error);
-                setIsLoading(false);
-            }
+        try {
+            await login(checked, value);
+            setIsLoading(false);
+            onLogin();
+            const { from } = location.state || { from: { pathname: "/adverts" } };
+            history.replace(from);
+        } catch (error) {
+            setError(error);
+            setIsLoading(false);
         }
     };
 

@@ -32,9 +32,6 @@ function App({ isInitiallyLogged }) {
       <AuthContextProvider value={{ isLogged, handleLogin, handleLogout }}>
         <div className="App">
           <Switch>
-            <Route path="/login">
-              {(routeProps) => <LoginPage {...routeProps} />}
-            </Route>
             <PrivateRoute path="/adverts/new">
               <NewAdvertsPage />
             </PrivateRoute>
@@ -46,12 +43,15 @@ function App({ isInitiallyLogged }) {
             <PrivateRoute path="/adverts">
               {(routeProps) => <AdvertsPage />}
             </PrivateRoute>
-            <PrivateRoute exact path="/">
-              <Redirect to="/adverts" />
-            </PrivateRoute>
+            <Route path="/login">
+              {(routeProps) => <LoginPage {...routeProps} />}
+            </Route>
             <Route path="/404">
               <div>404 | Not Found Page</div>
             </Route>
+            <PrivateRoute exact path="/">
+              <Redirect to="/adverts" />
+            </PrivateRoute>
             <Route>
               <Redirect to="/404" />
             </Route>
