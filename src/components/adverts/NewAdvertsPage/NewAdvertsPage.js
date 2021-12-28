@@ -26,6 +26,7 @@ function NewAdvertsPage() {
             ...prevState,
             [event.target.name]: event.target.value
         }));
+        console.log(event.target.value)
     };
 
     // no peritimos el envio submit hasta que este todo completo, menos la foto que no es requerida
@@ -73,31 +74,34 @@ function NewAdvertsPage() {
         <Layout title="Añade tu anuncio">
             <form className="formContainer" onSubmit={handleSubmit}>
                 <div className="advertName">
-                    <input name="name" type="text" placeholder="Introduce el nombre" onChange={handleChange} />
+                    <input name="name" value={value.name} type="text" placeholder="Introduce el nombre" onChange={handleChange} />
                 </div>
                 <div className="AdvertSale">
                     <label>Selecciona si es venta o compra </label>
-                    <select name="sale" onChange={handleChange}>
+                    <select name="sale" value={value.sale} onChange={handleChange}>
                         <option value="">--</option>
                         <option value="true">Venta</option>
                         <option value="false">Compra</option>
                     </select>
                 </div>
                 <div className="advertPrice">
-                    <input name="price" type="number" placeholder="Introduce el precio" onChange={handleChange} />
+                    <input name="price" type="number" min="0" value={value.price} placeholder="Introduce el precio" onChange={handleChange} />
                 </div>
                 <div className="tags">
                     <label className="labelSelect" >Etiquetas: </label> <br></br>
                     <select name="tags" multiple onChange={handleChange}>
-                        <option value="">--</option>
-                        {tags.map((tags) => (
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+
+                        {/* {tags.map((tags) => (
                             <option value={tags}>{tags}</option>
-                        ))}
+                        ))} */}
                     </select>
                 </div>
                 <div className="advertPhoto">
                     <input
-                        name="photo" t
+                        name="photo"
                         type="file"
                         onChange={(e) => setValue(prevState => ({
                             ...prevState,
