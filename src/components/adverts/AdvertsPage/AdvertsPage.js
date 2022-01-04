@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getLatestAdverts, getTags } from '../service.js';
+import { getLatestAdverts } from '../service.js';
 import Button from '../../common/Button.js';
 import Layout from '../../layout/Layout.js';
 import Advert from './Advert';
@@ -17,30 +17,22 @@ const EmptyList = () => (
 );
 
 function AdvertsPage({ history, ...props }) {
-    const [allAdverts, setAdverts] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [filteredData, setFilteredData] = useState(allAdverts);
-
-
+    const [defaultAdverts, setAdverts] = useState([]);
+    const [filteredAdverts, setFilteredAdverts] = useState(defaultAdverts);
+    // const [tags, setTags] = useState([]);
 
     useEffect(() => {
-        getLatestAdverts().then(adverts => { setAdverts(adverts); setFilteredData(adverts) });
-        getTags().then(tags => setTags(tags));
+        getLatestAdverts().then(adverts => { setAdverts(adverts); setFilteredAdverts(adverts) });
+        // getTags().then(tags => setTags(tags));
     }, []);
 
     const handleSearch = (event) => {
         let value = event.target.value.toLowerCase();
-        let result = {};
-        console.log(value);
-        // const nombre = allAdverts.map(function (name) {
-        //     return name;
-        // });
-        // console.log(nombre)
-        result = allAdverts.filter((data) => {
-            return data.name.search('^' + value, 'i');
+        let result = null;
+        result = defaultAdverts.filter((data) => {
+            return data.name.toLowerCase().search(value) !== -1;
         });
-        console.log(result)
-        setFilteredData(result)
+        setFilteredAdverts(result)
     }
 
     return (
@@ -75,9 +67,9 @@ function AdvertsPage({ history, ...props }) {
                     Filtrar
                 </Button> */}
             {/* </form> */}
-            {allAdverts.length ? (
+            {defaultAdverts.length ? (
                 <div className="container">
-                    {filteredData.map(({ id, nombre, ...advert }) => (
+                    {filteredAdverts.map(({ id, nombre, ...advert }) => (
                         <div key={nombre} >
                             <Link to={`/adverts/${id}`} style={{ textDecoration: 'none' }}>
                                 <Advert {...advert} />

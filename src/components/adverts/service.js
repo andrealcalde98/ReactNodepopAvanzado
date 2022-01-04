@@ -1,5 +1,4 @@
-import client, { setAuthorizationHeader } from '../../api/client';
-import storage from '../../utils/storage';
+import client from '../../api/client';
 
 
 const advertsBaseUrl = '/api/v1';

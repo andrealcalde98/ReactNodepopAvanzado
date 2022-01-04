@@ -1,12 +1,12 @@
 .confirmation-box {
-    display: none;
+    display: flex;
     flex-direction: column;
     position: fixed;
     background-color: green;
     width: 230px;
-    top: 75%;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -75%);
+    transform: translate(-50%, -50%);
     border-radius: 0.3rem;
     padding: 1rem;
     z-index: 5;
@@ -55,7 +55,7 @@
 
 .confirm-bg {
     position: fixed;
-    display: none;
+    display: flex;
     left: 0;
     top: 0;
     width: 100%;

@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import Button from '../../common/Button';
 import Layout from '../../layout/Layout';
 import { createAdvert, getTags } from "../service";
+import Select from 'react-select';
 
 import './NewAdvertsPage.css';
 
@@ -10,7 +11,7 @@ function NewAdvertsPage() {
     const [tags, setTags] = useState([]);
     const history = useHistory();
     const [createdAdvertId, setCreatedAdvertId] = useState("");
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const [value, setValue] = useState({
@@ -26,7 +27,19 @@ function NewAdvertsPage() {
             ...prevState,
             [event.target.name]: event.target.value
         }));
-        console.log(event.target.value)
+        console.log(value)
+    };
+
+    const handleTags = (selectedOptions, event) => {
+        let value = Array.from(
+            selectedOptions,
+            (option) => option.value
+        );
+        setValue((prevState) => ({
+            ...prevState,
+            [event.name]: value,
+        }));
+        console.log(value)
     };
 
     // no peritimos el envio submit hasta que este todo completo, menos la foto que no es requerida
@@ -53,14 +66,19 @@ function NewAdvertsPage() {
             const createdAdvert = await createAdvert(newAdvert);
             setCreatedAdvertId(createdAdvert.id);
         } catch (error) {
-            console.log(error);
-            setError(error);
+            setErrors(error);
+            console.log(errors);
             setIsLoading(false);
             if (error.status === 401) {
                 return history.push("/login");
             }
         }
     };
+
+    // constante con las etiquetas a mostrar
+    const options = tags.map((tags) => ({
+        value: tags, label: tags
+    }))
 
     useEffect(() => {
         getTags().then(tags => setTags(tags));
@@ -88,16 +106,21 @@ function NewAdvertsPage() {
                     <input name="price" type="number" min="0" value={value.price} placeholder="Introduce el precio" onChange={handleChange} />
                 </div>
                 <div className="tags">
-                    <label className="labelSelect" >Etiquetas: </label> <br></br>
-                    <select name="tags" multiple onChange={handleChange}>
-                        <option value="1">1</option>
+                    <Select
+                        name="tags"
+                        placeholder="Selecciona una o más etiquetas"
+                        isMulti
+                        options={options}
+                        onChange={handleTags}
+                    >
+                        {/* name="tags" multiple onChange={handleChange} */}
+                        {/* <option value="1">1</option>
                         <option value="2">2</option>
-                        <option value="3">3</option>
-
-                        {/* {tags.map((tags) => (
-                            <option value={tags}>{tags}</option>
-                        ))} */}
-                    </select>
+                        <option value="3">3</option> */}
+                    </Select><br></br>
+                    {/* {tags.map((tags) => (
+                        <label>{tags}</label>
+                    ))} */}
                 </div>
                 <div className="advertPhoto">
                     <input

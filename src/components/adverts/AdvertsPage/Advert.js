@@ -20,7 +20,7 @@ const Advert = ({ name, sale, price, tags, photo }) => {
           : (<dd> Compra </dd>)
       }
       <dd> {price} €</dd>
-      <dd> Etiquetas: {tags}</dd>
+      <dd> Etiquetas: {tags.join(', ')}</dd>
     </div >
   );
 };
