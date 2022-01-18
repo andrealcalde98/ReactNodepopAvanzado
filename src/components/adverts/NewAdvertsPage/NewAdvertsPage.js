@@ -113,10 +113,6 @@ function NewAdvertsPage() {
                         options={options}
                         onChange={handleTags}
                     >
-                        {/* name="tags" multiple onChange={handleChange} */}
-                        {/* <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option> */}
                     </Select><br></br>
                     {/* {tags.map((tags) => (
                         <label>{tags}</label>

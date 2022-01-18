@@ -14,7 +14,6 @@ function LoginPage({ onLogin, history, location }) {
     const [isLoading, setIsLoading] = useState(false);
     const [checked, setIsChecked] = useState(null);
 
-
     const resetError = () => setError(null);
 
     const handleChange = (event) => {

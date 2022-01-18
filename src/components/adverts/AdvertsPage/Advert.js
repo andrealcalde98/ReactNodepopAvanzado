@@ -14,13 +14,13 @@ const Advert = ({ name, sale, price, tags, photo }) => {
           <p>{name}</p>
         </b>
       </dt>
+      <p> {price} €</p>
       {
         sale === true ?
-          (<dd> Venta </dd>)
-          : (<dd> Compra </dd>)
+          (<p> Venta </p>)
+          : (<p> Compra </p>)
       }
-      <dd> {price} €</dd>
-      <dd> Etiquetas: {tags.join(', ')}</dd>
+      <p> Etiquetas: {tags.join(', ')}</p>
     </div >
   );
 };
