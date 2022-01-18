@@ -147,9 +147,9 @@ function AdvertsPage({ history, ...props }) {
                     >
                     </Select>
                     <br></br>
-                    <button className="applySearch" type="submit">Aplicar filtros</button>
-                    <button className="resetFilters" onClick={handleReset}>Borrar filtros</button>
                 </div>
+                <button className="applySearch" type="submit">Aplicar filtros</button>
+                <button className="resetFilters" onClick={handleReset}>Borrar filtros</button>
             </form>
             {
                 filteredAdverts.length ? (
