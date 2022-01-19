@@ -1,20 +1,17 @@
+import { connect } from 'react-redux';
 import T from 'prop-types';
 import { useState, useMemo } from "react";
 import FormField from "../../common/FormField.js";
 import Button from "../../common/Button";
 
-import { login } from "../service";
-import { AuthContextConsumer } from "../context";
+import { authLogin, uiResetError } from '../../../store/action'
+import { getUi } from '../../../store/selectors';
 
 import "./LoginPage.css";
 
-function LoginPage({ onLogin, history, location }) {
+function LoginPage({ onLogin, resetError, isLoading, error, history }) {
     const [value, setValue] = useState({ email: "", password: "" });
-    const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
     const [checked, setIsChecked] = useState(null);
-
-    const resetError = () => setError(null);
 
     const handleChange = (event) => {
         setValue((prevState) => ({
@@ -28,21 +25,10 @@ function LoginPage({ onLogin, history, location }) {
         setIsChecked(event.target.checked)
     }
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async event => {
         event.preventDefault();
-        // call to api - send value
-        setIsLoading(true);
-        resetError();
-        try {
-            await login(checked, value);
-            setIsLoading(false);
-            onLogin();
-            const { from } = location.state || { from: { pathname: "/adverts" } };
-            history.replace(from);
-        } catch (error) {
-            setError(error);
-            setIsLoading(false);
-        }
+        await onLogin(checked, value, history).then(() => {
+        });
     };
 
     const buttonDisabled = useMemo(
@@ -98,10 +84,24 @@ LoginPage.propTypes = {
     onLogin: T.func.isRequired,
 };
 
-const ConnectedLoginPage = (props) => (
-    <AuthContextConsumer>
-        {(auth) => <LoginPage onLogin={auth.handleLogin} {...props} />}
-    </AuthContextConsumer>
-);
+// const ConnectedLoginPage = (props) => (
+//     <AuthContextConsumer>
+//         {(auth) => <LoginPage onLogin={auth.handleLogin} {...props} />}
+//     </AuthContextConsumer>
+// );
+
+const mapStateToProps = state => {
+    return getUi(state);
+};
+
+const mapDispatchToProps = {
+    onLogin: authLogin,
+    resetError: uiResetError,
+};
+
+const ConnectedLoginPage = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(LoginPage);
 
 export default ConnectedLoginPage;
