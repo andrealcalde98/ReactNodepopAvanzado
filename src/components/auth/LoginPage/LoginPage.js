@@ -9,7 +9,7 @@ import { getUi } from '../../../store/selectors';
 
 import "./LoginPage.css";
 
-function LoginPage({ onLogin, resetError, isLoading, error, history }) {
+function LoginPage({ onLogin, resetError, isLoading, error }) {
     const [value, setValue] = useState({ email: "", password: "" });
     const [checked, setIsChecked] = useState(null);
 
@@ -27,7 +27,7 @@ function LoginPage({ onLogin, resetError, isLoading, error, history }) {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        await onLogin(checked, value, history).then(() => {
+        await onLogin(checked, value).then(() => {
         });
     };
 

@@ -30,9 +30,9 @@ export function authLoginFailure(error) {
     };
 }
 
-export function authLogin(checked, credentials, history) {
+export function authLogin(checked, credentials) {
     // This function will be a redux action
-    return async function (dispatch, getState, { api }) {
+    return async function (dispatch, getState, { api, history }) {
         dispatch(authLoginRequest());
         try {
             await api.auth.login(checked, credentials);
