@@ -1,14 +1,24 @@
-import { useContext } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import Button from '../common/Button';
 import { ReactComponent as Icon } from '../../assets/nodepop.svg';
-import AuthContext from '../auth/context';
+import { logout } from '../auth/service';
 import { Link, NavLink } from 'react-router-dom';
 
 import './Header.css';
+import { getIsLogged } from '../../store/selectors';
+import { authLogout } from '../../store/action';
 
 function Header({ className }) {
-  const { isLogged, handleLogout } = useContext(AuthContext);
+  const isLogged = useSelector(getIsLogged);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    logout().then(() => {
+      dispatch(authLogout);
+    });
+  };
+
   return (
     <header className={classNames('header', className)}>
       <Link to="/">

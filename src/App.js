@@ -16,20 +16,11 @@ import NewAdvertsPage from "./components/adverts/NewAdvertsPage/NewAdvertsPage";
 
 import { AuthContextProvider } from './components/auth/context';
 
-function App({ isInitiallyLogged }) {
-  const [isLogged, setIsLogged] = useState(isInitiallyLogged);
-
-  const handleLogin = () => {
-    setIsLogged(true);
-  };
-
-  const handleLogout = () => {
-    logout().then(() => setIsLogged(false));
-  };
+function App() {
 
   return (
     <Router>
-      <AuthContextProvider value={{ isLogged, handleLogin, handleLogout }}>
+      <AuthContextProvider>
         <div className="App">
           <Switch>
             <PrivateRoute path="/adverts/new">

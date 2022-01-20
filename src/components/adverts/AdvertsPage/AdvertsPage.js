@@ -1,39 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Slider, Box } from '@mui/material';
 import Select from 'react-select';
 
-import { getLatestAdverts, getTags } from '../service.js';
 import Layout from '../../layout/Layout.js';
 import Advert from './Advert';
 import { marks } from './marks.js';
 import { EmptyList } from './EmptyList'
 import './Advert.css';
 
-function AdvertsPage({ history, ...props }) {
-    const [defaultAdverts, setAdverts] = useState([]);
-    const [filteredAdverts, setFilteredAdverts] = useState(defaultAdverts);
-    const [tags, setTags] = useState([]);
+import { loadAdverts, loadTags } from '../../../store/action';
+import { getAdverts, getTags } from '../../../store/selectors';
 
-    // Default values (reset)
+function AdvertsPage({ history, ...props }) {
+    const dispatch = useDispatch();
+    const defaultAdverts = useSelector(getAdverts)
+    const tags = useSelector(getTags)
+
+    const [filteredAdverts, setFilteredAdverts] = useState([]);
+
+    // Set values to filter
+    const [filters, setFilters] = useState(
+        { name: "", sale: "", price: [1, 1000], tags: [] });
+
+    // Default inputs values (to reset)
     const [defaultInputValue, setDefaultInputValue] = useState("");
     const [defaultRadioValue, setDefaultRadioValue] = useState({ false: false, true: false });
     const [defaultSliderValue, setDefaultSliderValue] = useState([1, 1000]);
     const [defaultSelectValue, setDefaultSelectValue] = useState([]);
 
-    // set filters values
-    const [filters, setFilters] = useState(
-        { name: "", sale: "", price: [1, 1000], tags: [] });
+    useLayoutEffect(() => {
+        setFilteredAdverts(defaultAdverts)
+    }, [defaultAdverts]);
 
-    // set tags options
+    useEffect(() => {
+        dispatch(loadAdverts());
+        dispatch(loadTags())
+    }, [dispatch]);
+
+    // set tags into options const for SELECT component
     const options = tags.map((tags) => ({
         value: tags, label: tags
     }))
-
-    useEffect(() => {
-        getLatestAdverts().then(adverts => { setAdverts(adverts); setFilteredAdverts(adverts) });
-        getTags().then(tags => setTags(tags));
-    }, []);
 
     const handleName = (event) => {
         setDefaultInputValue(event.target.value)
