@@ -1,33 +1,45 @@
-import { Redirect, useHistory } from "react-router";
+import { connect } from 'react-redux';
 import { useState, useMemo, useEffect } from "react";
 import Button from '../../common/Button';
 import Layout from '../../layout/Layout';
-import { createAdvert, getTags } from "../service";
 import Select from 'react-select';
+import { useDispatch, useSelector } from 'react-redux';
+import { createAdvert, loadTags } from '../../../store/action';
+import { getTags, getUi } from '../../../store/selectors';
+
 
 import './NewAdvertsPage.css';
 
-function NewAdvertsPage() {
-    const [tags, setTags] = useState([]);
-    const history = useHistory();
-    const [createdAdvertId, setCreatedAdvertId] = useState("");
-    const [errors, setErrors] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+function NewAdvertsPage({ isLoading }) {
+    const dispatch = useDispatch();
+    const tags = useSelector(getTags)
 
     const [value, setValue] = useState({
         name: "",
         sale: "",
-        price: null,
+        price: "",
         tags: [],
         photo: null
     });
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        let newAdvert = new FormData()
+        newAdvert.append("name", value.name)
+        newAdvert.append("sale", value.sale)
+        newAdvert.append("price", value.price)
+        newAdvert.append("tags", value.tags)
+        if (value.photo) {
+            newAdvert.append("photo", value.photo)
+        }
+        await dispatch(createAdvert(newAdvert));
+    };
 
     const handleChange = event => {
         setValue(prevState => ({
             ...prevState,
             [event.target.name]: event.target.value
         }));
-        console.log(value)
     };
 
     const handleTags = (selectedOptions, event) => {
@@ -39,7 +51,6 @@ function NewAdvertsPage() {
             ...prevState,
             [event.name]: value,
         }));
-        console.log(value)
     };
 
     // no peritimos el envio submit hasta que este todo completo, menos la foto que no es requerida
@@ -48,45 +59,14 @@ function NewAdvertsPage() {
         [isLoading, value.name, value.sale, value.price, value.tags],
     );
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        setIsLoading(true);
-        console.log(value)
-        try {
-            setIsLoading(false);
-            // añadimos los valores en un formData para poder enviar la foto correctament
-            let newAdvert = new FormData()
-            newAdvert.append("name", value.name)
-            newAdvert.append("sale", value.sale)
-            newAdvert.append("price", value.price)
-            newAdvert.append("tags", value.tags)
-            if (value.photo) {
-                newAdvert.append("photo", value.photo)
-            }
-            const createdAdvert = await createAdvert(newAdvert);
-            setCreatedAdvertId(createdAdvert.id);
-        } catch (error) {
-            setErrors(error);
-            console.log(errors);
-            setIsLoading(false);
-            if (error.status === 401) {
-                return history.push("/login");
-            }
-        }
-    };
+    useEffect(() => {
+        dispatch(loadTags())
+    }, [dispatch]);
 
-    // constante con las etiquetas a mostrar
+    // Tags to show in SELECT
     const options = tags.map((tags) => ({
         value: tags, label: tags
     }))
-
-    useEffect(() => {
-        getTags().then(tags => setTags(tags));
-    }, []);
-
-    if (createdAdvertId) {
-        return <Redirect to={`/adverts/${createdAdvertId}`} />;
-    }
 
     return (
         <Layout title="Añade tu anuncio">
@@ -114,9 +94,6 @@ function NewAdvertsPage() {
                         onChange={handleTags}
                     >
                     </Select><br></br>
-                    {/* {tags.map((tags) => (
-                        <label>{tags}</label>
-                    ))} */}
                 </div>
                 <div className="advertPhoto">
                     <input
@@ -142,4 +119,13 @@ function NewAdvertsPage() {
     );
 }
 
-export default NewAdvertsPage;
+const mapStateToProps = state => {
+    return getUi(state);
+};
+
+const ConnectedNewAdvertsPage = connect(
+    mapStateToProps,
+)(NewAdvertsPage);
+
+export default ConnectedNewAdvertsPage;
+

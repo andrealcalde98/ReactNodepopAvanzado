@@ -9,7 +9,7 @@ import { getUi } from '../../../store/selectors';
 
 import "./LoginPage.css";
 
-function LoginPage({ onLogin, resetError, isLoading, error }) {
+export function LoginPage({ onLogin, resetError, isLoading, error }) {
     const [value, setValue] = useState({ email: "", password: "" });
     const [checked, setIsChecked] = useState(null);
 
@@ -83,12 +83,6 @@ function LoginPage({ onLogin, resetError, isLoading, error }) {
 LoginPage.propTypes = {
     onLogin: T.func.isRequired,
 };
-
-// const ConnectedLoginPage = (props) => (
-//     <AuthContextConsumer>
-//         {(auth) => <LoginPage onLogin={auth.handleLogin} {...props} />}
-//     </AuthContextConsumer>
-// );
 
 const mapStateToProps = state => {
     return getUi(state);

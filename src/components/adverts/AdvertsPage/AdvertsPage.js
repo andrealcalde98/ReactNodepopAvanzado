@@ -13,7 +13,7 @@ import './Advert.css';
 import { loadAdverts, loadTags } from '../../../store/action';
 import { getAdverts, getTags } from '../../../store/selectors';
 
-function AdvertsPage({ history, ...props }) {
+function AdvertsPage({ ...props }) {
     const dispatch = useDispatch();
     const defaultAdverts = useSelector(getAdverts)
     const tags = useSelector(getTags)

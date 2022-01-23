@@ -1,29 +1,28 @@
+import { connect } from 'react-redux';
 import React from 'react';
 import { useEffect, useState, useMemo } from 'react';
-import { Redirect, useLocation, useParams } from 'react-router';
-import { useHistory } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import Button from '../../common/Button';
 import Layout from '../../layout/Layout';
-import { getAdvert, deleteAdvert } from '../service';
+import { getAdvert, getUi } from '../../../store/selectors';
+import { deleteAdvert, loadAdvert } from '../../../store/action';
 import './AdvertPage.css';
 import Confirmation from './Confirmation';
 import './Confirmation.css';
 
 
-function AdvertPage() {
+function AdvertPage({ advert, isLoading }) {
   const { advertId } = useParams();
-  const [advert, setAdvert] = useState(null);
-  const [error, setError] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+
   const [display, setDisplay] = useState(false);
 
-  const history = useHistory();
-  const location = useLocation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getAdvert(advertId).then(advert => setAdvert(advert)).catch(error => setError(error));
-  }, [advertId]);
+    dispatch(loadAdvert(advertId))
+  }, [dispatch, advertId]);
 
   const handleConfirmDelete = async (event) => {
     event.preventDefault();
@@ -32,25 +31,13 @@ function AdvertPage() {
 
   // Procedimiento para borrar el anuncio
   const handleDelete = async () => {
-    try {
-      await deleteAdvert(advertId);
-      setIsLoading(false);
-      const { from } = location.state || { from: { pathname: "/adverts" } };
-      history.replace(from);
-    } catch (error) {
-      setError(error);
-      setIsLoading(false);
-    }
+    await dispatch(deleteAdvert(advertId))
   }
 
   const buttonDisabled = useMemo(
     () => isLoading
     [isLoading]
   );
-
-  if (error?.status === 404) {
-    return <Redirect to="/404" />;
-  }
 
   return (
     <div>
@@ -86,4 +73,14 @@ function AdvertPage() {
   );
 }
 
-export default AdvertPage;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    advert: getAdvert(state, ownProps.match.params.advertId),
+    ...getUi(state),
+  };
+};
+
+const connectedToStore = connect(mapStateToProps);
+
+
+export default connectedToStore(AdvertPage);
