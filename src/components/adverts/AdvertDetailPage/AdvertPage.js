@@ -44,7 +44,7 @@ function AdvertPage({ advert, isLoading }) {
       {advert &&
         <Layout title={advert.name}>
           <div>
-            <img className="photo" alt="advert" src={`${process.env.REACT_APP_API_BASE_URL}${advert.photo}`} />
+            <img className="photo" alt="advert" src={advert.photo} />
           </div>
           <hr />
           <article className="data">

@@ -7,7 +7,7 @@ import './Advert.css';
 const Advert = ({ name, sale, price, tags, photo }) => {
   return (
     <div className="carta">
-      {photo ? (<dt> <img className="imagenDetalle" src={`${process.env.REACT_APP_API_BASE_URL}${photo}`} alt="detalle"></img> </dt>)
+      {photo ? (<dt> <img className="imagenDetalle" src={photo} alt="detalle"></img> </dt>)
         : null}
       <dt>
         <b>

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useState, useEffect, useRef } from 'react/cjs/react.development';
+import { useState, useEffect, useRef } from 'react';
 
 import './FormField.css';
 
